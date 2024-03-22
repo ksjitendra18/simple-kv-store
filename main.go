@@ -1,22 +1,9 @@
 package main
 
 import (
-	"sync"
-
 	"github.com/gin-gonic/gin"
 	"github.com/ksjitendra18/simple-kv-store/routes"
 )
-
-type Store struct {
-	data map[string]string
-	mu   sync.RWMutex
-}
-
-func NewStore() *Store {
-	return &Store{
-		data: make(map[string]string),
-	}
-}
 
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
