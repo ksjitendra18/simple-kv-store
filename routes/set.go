@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,17 +21,17 @@ func Set(c *gin.Context) {
 
 	var requestData SetRequest
 
-	// Bind the JSON data to the SetRequest struct
 	if err := c.BindJSON(&requestData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	fmt.Println("key", requestData.Key, requestData.Value)
-
-	// Get the store instance
 	store := c.MustGet("store").(*Store)
-	store.Set(requestData.Key, requestData.Value)
+
+	expirySeconds := time.Duration(requestData.Options.Ex) * time.Second
+
+	// store.Set(requestData.Key, requestData.Value, requestData.Options.Ex)
+	store.Set(requestData.Key, requestData.Value, expirySeconds)
 	c.JSON(200, gin.H{
 		"message": "Data set successfully",
 	})
